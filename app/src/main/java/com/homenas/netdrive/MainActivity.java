@@ -55,6 +55,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // Set the first MenuItem title for Actionbar title
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(navigationView.getMenu().getItem(0).getTitle().toString());
+        }
     }
 
     @Override
@@ -94,6 +99,10 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        // Get navigation item name and set it to actionbar title
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(item.getTitle().toString());
+        }
 
         if (id == R.id.nav_local) {
             // Handle the camera action
