@@ -1,10 +1,15 @@
 package com.homenas.netdrive;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,6 +22,7 @@ import android.view.animation.DecelerateInterpolator;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    public MenuItem viewMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +82,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        viewMode = menu.findItem(R.id.action_view);
+        MenuIcon(this,viewMode,R.drawable.ic_view_list_black_24dp,android.R.color.white);
         return true;
     }
 
@@ -117,5 +125,12 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public static void MenuIcon(Context context, MenuItem item, int icon, @ColorRes int color) {
+        item.setIcon(icon);
+        Drawable menuDrawable = item.getIcon();
+        Drawable wrapDrawable = DrawableCompat.wrap(menuDrawable);
+        DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(context,color));
     }
 }
