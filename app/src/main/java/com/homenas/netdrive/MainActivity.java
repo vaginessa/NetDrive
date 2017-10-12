@@ -14,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import android.view.animation.DecelerateInterpolator;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public MenuItem viewMode;
+    public MenuItem search;
     public Boolean viewGrid = false;
 
     @Override
@@ -84,7 +86,10 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         viewMode = menu.findItem(R.id.action_view);
+        search = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) search.getActionView();
         MenuIcon(this,viewMode,R.drawable.ic_view_list_black_24dp,android.R.color.white);
+        MenuIcon(this,search,R.drawable.ic_search_black_24dp,android.R.color.white);
         return true;
     }
 
