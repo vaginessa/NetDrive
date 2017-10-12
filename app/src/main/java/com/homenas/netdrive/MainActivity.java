@@ -1,6 +1,7 @@
 package com.homenas.netdrive;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -88,6 +90,9 @@ public class MainActivity extends AppCompatActivity
         viewMode = menu.findItem(R.id.action_view);
         search = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) search.getActionView();
+        searchView.setBackgroundColor(ContextCompat.getColor(this,android.R.color.white));
+        ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setTextColor(Color.GRAY);
+        ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).setHintTextColor(Color.GRAY);
         MenuIcon(this,viewMode,R.drawable.ic_view_list_black_24dp,android.R.color.white);
         MenuIcon(this,search,R.drawable.ic_search_black_24dp,android.R.color.white);
         return true;
