@@ -23,6 +23,7 @@ import android.view.animation.DecelerateInterpolator;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public MenuItem viewMode;
+    public Boolean viewGrid = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +98,14 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_view) {
+            if(viewGrid) {
+                MenuIcon(this, viewMode, R.drawable.ic_view_list_black_24dp, android.R.color.white);
+            }else{
+                MenuIcon(this, viewMode, R.drawable.ic_view_module_black_24dp, android.R.color.white);
+            }
+            viewGrid = !viewGrid;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
