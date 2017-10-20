@@ -129,8 +129,16 @@ public class MainActivity extends AppCompatActivity
             getSupportActionBar().setTitle(item.getTitle().toString());
         }
 
-        if (id == R.id.nav_local) {
+        if (id == R.id.nav_audio) {
             // Handle the camera action
+        } else if (id == R.id.nav_image) {
+
+        } else if (id == R.id.nav_video) {
+
+        } else if (id == R.id.nav_download) {
+
+        } else if (id == R.id.nav_local) {
+
         } else if (id == R.id.nav_sdcard) {
 
         } else if (id == R.id.nav_network) {
