@@ -1,5 +1,6 @@
 package com.homenas.netdrive;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -33,6 +34,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initFrag();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -157,5 +161,13 @@ public class MainActivity extends AppCompatActivity
         Drawable menuDrawable = item.getIcon();
         Drawable wrapDrawable = DrawableCompat.wrap(menuDrawable);
         DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(context,color));
+    }
+
+    private void initFrag() {
+        RecyclerViewFragment mRecyclerViewFragment = new RecyclerViewFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.container, mRecyclerViewFragment);
+        ft.addToBackStack(null);
+        ft.commit();
     }
 }
