@@ -1,6 +1,5 @@
 package com.homenas.netdrive;
 
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -10,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.GravityCompat;
@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity
     public MenuItem viewMode;
     public MenuItem search;
     public Boolean viewGrid = false;
+
+    public RecyclerViewFragment mRecyclerViewFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,19 +106,18 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        mRecyclerViewFragment = (RecyclerViewFragment) getSupportFragmentManager().findFragmentById(R.id.container);
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_view) {
             if(viewGrid) {
                 MenuIcon(this, viewMode, R.drawable.ic_view_list_black_24dp, android.R.color.white);
+                mRecyclerViewFragment.setRecyclerViewLayoutManager(Constants.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
             }else{
                 MenuIcon(this, viewMode, R.drawable.ic_view_module_black_24dp, android.R.color.white);
+                mRecyclerViewFragment.setRecyclerViewLayoutManager(Constants.LayoutManagerType.GRID_LAYOUT_MANAGER);
             }
             viewGrid = !viewGrid;
         }
@@ -164,8 +165,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initFrag() {
-        RecyclerViewFragment mRecyclerViewFragment = new RecyclerViewFragment();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        mRecyclerViewFragment = new RecyclerViewFragment();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, mRecyclerViewFragment);
         ft.addToBackStack(null);
         ft.commit();
