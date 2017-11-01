@@ -2,6 +2,7 @@ package com.homenas.netdrive;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,6 +49,9 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView = view.findViewById(recyclerView);
+        mRecyclerView.hasFixedSize();
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+        mRecyclerView.addItemDecoration(itemDecoration);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
         if (savedInstanceState != null) {
