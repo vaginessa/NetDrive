@@ -1,5 +1,6 @@
 package com.homenas.netdrive;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,9 +18,15 @@ import static android.content.ContentValues.TAG;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
+    public interface CustomAdapterListener { // create an interface
+        void onItemClick(int position); // create callback function
+    }
+
+    private Context mContext;
+    private CustomAdapterListener mListener;
     private List<String> mDataSet;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;
 
         public ViewHolder(View v) {
@@ -29,6 +36,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
+                    mListener.onItemClick(getAdapterPosition());
                 }
             });
             textView = v.findViewById(R.id.textView);
@@ -39,8 +47,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         }
     }
 
-    public CustomAdapter(List<String> dataSet) {
+    public CustomAdapter(Context context, List<String> dataSet, CustomAdapterListener listener) {
+        mContext = context;
         mDataSet = dataSet;
+        this.mListener = listener;
     }
 
     @Override
