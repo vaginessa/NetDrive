@@ -50,8 +50,10 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView = view.findViewById(recyclerView);
         mRecyclerView.hasFixedSize();
-        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
-        mRecyclerView.addItemDecoration(itemDecoration);
+        DividerItemDecoration hDividerItemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.HORIZONTAL);
+        DividerItemDecoration lDividerItemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+        mRecyclerView.addItemDecoration(hDividerItemDecoration);
+        mRecyclerView.addItemDecoration(lDividerItemDecoration);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
         if (savedInstanceState != null) {
