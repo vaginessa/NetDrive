@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.homenas.netdrive.Constants.*;
 import static com.homenas.netdrive.R.id.recyclerView;
 
@@ -24,13 +27,13 @@ public class RecyclerViewFragment extends Fragment {
     private LayoutManagerType mCurrentLayoutManagerType;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private String[] mDataset;
+    private List<String> mDataset = new ArrayList<>();
     private static final int DATASET_COUNT = 60;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDataset();
+        mAdapter = new CustomAdapter(mDataset);
     }
 
     @Override
@@ -50,12 +53,13 @@ public class RecyclerViewFragment extends Fragment {
                     .getSerializable(KEY_LAYOUT_MANAGER);
         }
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
+        mRecyclerView.setAdapter(mAdapter);
         initItemList();
     }
 
     private void initItemList() {
-        mAdapter = new CustomAdapter(mDataset);
-        mRecyclerView.setAdapter(mAdapter);
+        initDataset();
+        mAdapter.notifyDataSetChanged();
     }
 
     public void setRecyclerViewLayoutManager(Constants.LayoutManagerType layoutManagerType) {
@@ -86,9 +90,8 @@ public class RecyclerViewFragment extends Fragment {
     }
 
     private void initDataset() {
-        mDataset = new String[DATASET_COUNT];
         for (int i = 0; i < DATASET_COUNT; i++) {
-            mDataset[i] = "This is element #" + i;
+            mDataset.add("This is element #" + i);
         }
     }
 }
