@@ -26,6 +26,7 @@ import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private final String TAG = getClass().getSimpleName();
     public MenuItem viewMode;
     public MenuItem search;
     public Boolean viewGrid = true;

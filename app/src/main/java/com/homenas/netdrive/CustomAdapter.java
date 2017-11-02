@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by engss on 24/10/2017.
  */
@@ -22,6 +20,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         void onItemClick(int position); // create callback function
     }
 
+    private final String TAG = getClass().getSimpleName();
     private Context mContext;
     private CustomAdapterListener mListener;
     private List<String> mDataSet;

@@ -26,6 +26,7 @@ import static com.homenas.netdrive.R.id.recyclerView;
 
 public class RecyclerViewFragment extends Fragment implements CustomAdapter.CustomAdapterListener {
 
+    private final String TAG = getClass().getSimpleName();
     private CustomAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private LayoutManagerType mCurrentLayoutManagerType;
