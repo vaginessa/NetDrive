@@ -25,6 +25,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     private Context mContext;
     private CustomAdapterListener mListener;
     private List<String> mDataSet;
+    private boolean mViewGrid;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;
@@ -57,7 +58,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view.
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.row_item, viewGroup, false);
+                .inflate(mViewGrid ? R.layout.card_item : R.layout.row_item, viewGroup, false);
 
         return new ViewHolder(v);
     }
@@ -74,5 +75,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return mDataSet.size();
+    }
+
+    public void setView(boolean viewGrid) {
+        mViewGrid = viewGrid;
     }
 }

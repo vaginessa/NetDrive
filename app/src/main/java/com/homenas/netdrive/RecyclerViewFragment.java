@@ -32,6 +32,7 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
     private RecyclerView.LayoutManager mLayoutManager;
 
     private List<String> mDataset = new ArrayList<>();
+    public Boolean viewGrid = true;
     private static final int DATASET_COUNT = 60;
 
     @Override
@@ -62,7 +63,7 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
                     .getSerializable(KEY_LAYOUT_MANAGER);
         }
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
-        mRecyclerView.setAdapter(mAdapter);
+
         initItemList();
     }
 
@@ -79,19 +80,24 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
             scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
                     .findFirstCompletelyVisibleItemPosition();
         }
-
         switch (layoutManagerType) {
             case GRID_LAYOUT_MANAGER:
                 mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
                 mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
+                mAdapter.setView(viewGrid);
+                mRecyclerView.setAdapter(mAdapter);
                 break;
             case LINEAR_LAYOUT_MANAGER:
                 mLayoutManager = new LinearLayoutManager(getActivity());
                 mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+                mAdapter.setView(!viewGrid);
+                mRecyclerView.setAdapter(mAdapter);
                 break;
             default:
                 mLayoutManager = new LinearLayoutManager(getActivity());
                 mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+                mAdapter.setView(!viewGrid);
+                mRecyclerView.setAdapter(mAdapter);
         }
 
         mRecyclerView.setLayoutManager(mLayoutManager);
