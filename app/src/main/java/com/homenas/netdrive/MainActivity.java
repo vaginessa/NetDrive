@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public MenuItem viewMode;
     public MenuItem search;
-    public Boolean viewGrid = false;
+    public Boolean viewGrid = true;
 
     public RecyclerViewFragment mRecyclerViewFragment;
 
@@ -113,11 +113,11 @@ public class MainActivity extends AppCompatActivity
             return true;
         } else if (id == R.id.action_view) {
             if(viewGrid) {
-                MenuIcon(this, viewMode, R.drawable.ic_view_list_black_24dp, android.R.color.white);
-                mRecyclerViewFragment.setRecyclerViewLayoutManager(Constants.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
-            }else{
                 MenuIcon(this, viewMode, R.drawable.ic_view_module_black_24dp, android.R.color.white);
                 mRecyclerViewFragment.setRecyclerViewLayoutManager(Constants.LayoutManagerType.GRID_LAYOUT_MANAGER);
+            }else{
+                MenuIcon(this, viewMode, R.drawable.ic_view_list_black_24dp, android.R.color.white);
+                mRecyclerViewFragment.setRecyclerViewLayoutManager(Constants.LayoutManagerType.LINEAR_LAYOUT_MANAGER);
             }
             viewGrid = !viewGrid;
         }
