@@ -2,6 +2,7 @@ package com.homenas.netdrive;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.provider.DocumentFile;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static com.homenas.netdrive.Constants.KEY_LAYOUT_MANAGER;
 import static com.homenas.netdrive.Constants.LayoutManagerType;
+import static com.homenas.netdrive.Constants.LocalRoot;
 import static com.homenas.netdrive.Constants.SPAN_COUNT;
 import static com.homenas.netdrive.R.id.recyclerView;
 
@@ -32,8 +34,9 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
     private LayoutManagerType mCurrentLayoutManagerType;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private List<String> mDataset = new ArrayList<>();
+    private List<FilesData> mDataset = new ArrayList<>();
     public Boolean viewGrid = true;
+    public DocumentFile curFiles;
     private static final int DATASET_COUNT = 60;
 
     @Override
@@ -69,7 +72,7 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
     }
 
     private void initItemList() {
-        initDataset();
+        updateData(LocalRoot);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -105,14 +108,21 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
         mRecyclerView.scrollToPosition(scrollPosition);
     }
 
-    private void initDataset() {
-        for (int i = 0; i < DATASET_COUNT; i++) {
-            mDataset.add("This is element #" + i);
-        }
-    }
-
     @Override
     public void onItemClick(int position){
         Toast.makeText(getActivity(), "click at " + mDataset.get(position), Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateData(DocumentFile files) {
+        if(files.isDirectory()) {
+            mDataset.clear();
+            curFiles = files;
+            for(DocumentFile file : files.listFiles()) {
+                FilesData data = new FilesData();
+                data.file = file;
+                data.fileName = file.getName();
+                mDataset.add(data);
+            }
+        }
     }
 }

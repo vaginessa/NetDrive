@@ -2,6 +2,10 @@ package com.homenas.netdrive;
 
 import android.Manifest;
 import android.os.Environment;
+import android.os.storage.StorageVolume;
+import android.support.v4.provider.DocumentFile;
+
+import java.io.File;
 
 /**
  * Created by engss on 24/10/2017.
@@ -19,6 +23,8 @@ public class Constants {
 
     public static final int PERMISSIONS_REQUEST_CODE = 0;
 
-    public static final String mStartPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    public static final DocumentFile LocalRoot = DocumentFile.fromFile(new File(Environment.getExternalStorageDirectory().getAbsolutePath()));
+
+    public static StorageVolume ExtSdVol = null;
 
 }
