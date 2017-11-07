@@ -6,6 +6,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.storage.StorageManager;
+import android.os.storage.StorageVolume;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -28,6 +31,8 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 
+import java.util.List;
+
 import static com.homenas.netdrive.Constants.PERMISSIONS_REQUEST_CODE;
 import static com.homenas.netdrive.Constants.permission;
 
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     public Boolean viewGrid = true;
 
     public RecyclerViewFragment mRecyclerViewFragment;
+    private StorageManager mStorageManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         checkPermission();
+        checkExtStorage();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -80,6 +87,10 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        if(Constants.ExtSdVol == null) {
+            Menu menu = navigationView.getMenu();
+            menu.findItem(R.id.nav_sdcard).setVisible(false);
+        }
 
         // Set the first MenuItem title for Actionbar title
         if(getSupportActionBar() != null) {
@@ -189,7 +200,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case PERMISSIONS_REQUEST_CODE:
@@ -199,7 +211,18 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     Log.i(TAG, "Request Permission: Not Granted");
                 }
-                return;
+        }
+    }
+
+    private void checkExtStorage() {
+        mStorageManager = getApplication().getSystemService(StorageManager.class);
+        List<StorageVolume> storageVolumes;
+        if (mStorageManager != null) {
+            storageVolumes = mStorageManager.getStorageVolumes();
+            for (final StorageVolume volume : storageVolumes)
+                if (!volume.isPrimary() && volume.getState().equals(Environment.MEDIA_MOUNTED)) {
+                    Constants.ExtSdVol = volume;
+                }
         }
     }
 }
