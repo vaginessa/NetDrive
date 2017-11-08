@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         // Set the first MenuItem title for Actionbar title
         if(getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(navigationView.getMenu().getItem(0).getTitle().toString());
+            getSupportActionBar().setTitle(navigationView.getMenu().getItem(4).getTitle().toString());
         }
         showExtStorage();
     }

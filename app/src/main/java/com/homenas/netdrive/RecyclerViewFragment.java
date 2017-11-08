@@ -1,6 +1,10 @@
 package com.homenas.netdrive;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.storage.StorageManager;
+import android.os.storage.StorageVolume;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -25,6 +29,7 @@ import java.util.List;
 import static com.homenas.netdrive.Constants.KEY_LAYOUT_MANAGER;
 import static com.homenas.netdrive.Constants.LayoutManagerType;
 import static com.homenas.netdrive.Constants.LocalRoot;
+import static com.homenas.netdrive.Constants.PERMISSIONS_REQUEST_CODE;
 import static com.homenas.netdrive.Constants.SPAN_COUNT;
 import static com.homenas.netdrive.R.id.recyclerView;
 
@@ -96,15 +101,14 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
         } else if (id == R.id.nav_download) {
 
         } else if (id == R.id.nav_local) {
-
+            initItemList();
         } else if (id == R.id.nav_sdcard) {
-
+            getExtStorage();
         } else if (id == R.id.nav_network) {
 
         } else if (id == R.id.nav_setting) {
 
         }
-
         DrawerLayout drawer = (DrawerLayout) ((AppCompatActivity)getActivity()).findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -112,8 +116,7 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
 
     private void initItemList() {
         curRoot = LocalRoot;
-        updateData(LocalRoot);
-        mAdapter.notifyDataSetChanged();
+        updateData(curRoot);
     }
 
     public void setRecyclerViewLayoutManager(Constants.LayoutManagerType layoutManagerType) {
@@ -152,7 +155,6 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
     public void onItemClick(int position){
 //        Toast.makeText(getActivity(), "click at " + mDataset.get(position), Toast.LENGTH_SHORT).show();
         updateData(mDataset.get(position).file);
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -176,12 +178,40 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
                 data.fileName = file.getName();
                 mDataset.add(data);
             }
+            Log.i(TAG,"Updated");
+            mAdapter.notifyDataSetChanged();
         }
     }
 
     private void updateTitle(String title) {
         if(((AppCompatActivity)getActivity()).getSupportActionBar() != null) {
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(title);
+        }
+    }
+
+    private void getExtStorage() {
+        StorageManager mStorageManager = getActivity().getSystemService(StorageManager.class);
+        if (mStorageManager != null) {
+            List<StorageVolume> storageVolumes = mStorageManager.getStorageVolumes();
+            for (final StorageVolume volume : storageVolumes) {
+                if(!volume.isPrimary()){
+                    Intent intent = volume.createAccessIntent(null);
+                    startActivityForResult(intent, PERMISSIONS_REQUEST_CODE);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PERMISSIONS_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            if(data.getData() != null) {
+                getActivity().getContentResolver().takePersistableUriPermission(data.getData(),Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                Constants.ExtStorage = DocumentFile.fromTreeUri(getActivity(),data.getData());
+                curRoot = Constants.ExtStorage;
+                updateData(Constants.ExtStorage);
+            }
         }
     }
 }
