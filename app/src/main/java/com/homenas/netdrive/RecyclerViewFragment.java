@@ -178,8 +178,8 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
                 data.fileName = file.getName();
                 mDataset.add(data);
             }
-            Log.i(TAG,"Updated");
             mAdapter.notifyDataSetChanged();
+            updateTitle(curFiles.getName());
         }
     }
 
