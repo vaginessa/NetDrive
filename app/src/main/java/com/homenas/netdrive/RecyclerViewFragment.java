@@ -7,9 +7,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,7 @@ import static com.homenas.netdrive.R.id.recyclerView;
  * Created by engss on 24/10/2017.
  */
 
-public class RecyclerViewFragment extends Fragment implements CustomAdapter.CustomAdapterListener {
+public class RecyclerViewFragment extends Fragment implements CustomAdapter.CustomAdapterListener, MainActivity.OnBackPressedListener {
 
     private final String TAG = getClass().getSimpleName();
     private CustomAdapter mAdapter;
@@ -36,12 +38,13 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
     private List<FilesData> mDataset = new ArrayList<>();
     public Boolean viewGrid = true;
     public DocumentFile curFiles;
-    private static final int DATASET_COUNT = 60;
+    private DocumentFile curRoot;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAdapter = new CustomAdapter(getActivity(), mDataset, this);
+        ((MainActivity) getActivity()).setOnBackPressedListener(this);
     }
 
     @Override
@@ -71,6 +74,7 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
     }
 
     private void initItemList() {
+        curRoot = LocalRoot;
         updateData(LocalRoot);
         mAdapter.notifyDataSetChanged();
     }
@@ -112,6 +116,17 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
 //        Toast.makeText(getActivity(), "click at " + mDataset.get(position), Toast.LENGTH_SHORT).show();
         updateData(mDataset.get(position).file);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void doBack() {
+        Log.i(TAG,curRoot.getUri().toString());
+        if(curFiles.getUri().toString().equals(curRoot.getUri().toString())) {
+            Toast.makeText(getActivity(), "At root ", Toast.LENGTH_SHORT).show();
+        }else{
+            updateData(curFiles.getParentFile());
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     private void updateData(DocumentFile files) {

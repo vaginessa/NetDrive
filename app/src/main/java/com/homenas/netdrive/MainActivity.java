@@ -38,6 +38,11 @@ import static com.homenas.netdrive.Constants.permission;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    public interface OnBackPressedListener {
+        void doBack();
+    }
+
     private final String TAG = getClass().getSimpleName();
     public MenuItem viewMode;
     public MenuItem search;
@@ -45,6 +50,7 @@ public class MainActivity extends AppCompatActivity
 
     public RecyclerViewFragment mRecyclerViewFragment;
     private StorageManager mStorageManager;
+    protected OnBackPressedListener onBackPressedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +107,8 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            onBackPressedListener.doBack();
+//            super.onBackPressed();
         }
     }
 
@@ -241,5 +248,9 @@ public class MainActivity extends AppCompatActivity
         }else{
             menu.findItem(R.id.nav_sdcard).setVisible(true);
         }
+    }
+
+    public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
+        this.onBackPressedListener = onBackPressedListener;
     }
 }
