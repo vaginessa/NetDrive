@@ -87,10 +87,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        if(Constants.ExtSdVol == null) {
-            Menu menu = navigationView.getMenu();
-            menu.findItem(R.id.nav_sdcard).setVisible(false);
-        }
+        showExtStorage();
 
         // Set the first MenuItem title for Actionbar title
         if(getSupportActionBar() != null) {
@@ -106,6 +103,13 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkExtStorage();
+        showExtStorage();
     }
 
     @Override
@@ -219,10 +223,23 @@ public class MainActivity extends AppCompatActivity
         List<StorageVolume> storageVolumes;
         if (mStorageManager != null) {
             storageVolumes = mStorageManager.getStorageVolumes();
-            for (final StorageVolume volume : storageVolumes)
+            for (final StorageVolume volume : storageVolumes) {
                 if (!volume.isPrimary() && volume.getState().equals(Environment.MEDIA_MOUNTED)) {
                     Constants.ExtSdVol = volume;
+                } else {
+                    Constants.ExtSdVol = null;
                 }
+            }
+        }
+    }
+
+    private void showExtStorage() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu menu = navigationView.getMenu();
+        if(Constants.ExtSdVol == null) {
+            menu.findItem(R.id.nav_sdcard).setVisible(false);
+        }else{
+            menu.findItem(R.id.nav_sdcard).setVisible(true);
         }
     }
 }
