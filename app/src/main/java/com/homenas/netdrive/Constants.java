@@ -27,4 +27,6 @@ public class Constants {
 
     public static StorageVolume ExtSdVol = null;
 
+    public static DocumentFile ExtStorage = null;
+
 }
