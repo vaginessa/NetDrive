@@ -36,8 +36,7 @@ import java.util.List;
 import static com.homenas.netdrive.Constants.PERMISSIONS_REQUEST_CODE;
 import static com.homenas.netdrive.Constants.permission;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     public interface OnBackPressedListener {
         void doBack();
@@ -92,13 +91,11 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        showExtStorage();
-
         // Set the first MenuItem title for Actionbar title
         if(getSupportActionBar() != null) {
             getSupportActionBar().setTitle(navigationView.getMenu().getItem(0).getTitle().toString());
         }
+        showExtStorage();
     }
 
     @Override
@@ -152,39 +149,6 @@ public class MainActivity extends AppCompatActivity
             viewGrid = !viewGrid;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        // Get navigation item name and set it to actionbar title
-        if(getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(item.getTitle().toString());
-        }
-
-        if (id == R.id.nav_audio) {
-            // Handle the camera action
-        } else if (id == R.id.nav_image) {
-
-        } else if (id == R.id.nav_video) {
-
-        } else if (id == R.id.nav_download) {
-
-        } else if (id == R.id.nav_local) {
-
-        } else if (id == R.id.nav_sdcard) {
-
-        } else if (id == R.id.nav_network) {
-
-        } else if (id == R.id.nav_setting) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     public static void MenuIcon(Context context, MenuItem item, int icon, @ColorRes int color) {
