@@ -29,4 +29,6 @@ public class Constants {
 
     public static DocumentFile ExtStorage = null;
 
+    public static boolean fabExpanded = false;
+
 }

@@ -17,4 +17,7 @@
     <string name="action_search">Search</string>
     <string name="action_view">View</string>
     <string name="action_settings">Settings</string>
+    <!-- For Floating Action Button -->
+    <string name="float_new_folder">New Folder</string>
+    <string name="float_new_file">New File</string>
 </resources>

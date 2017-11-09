@@ -13,7 +13,6 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -30,10 +29,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import java.util.List;
 
 import static com.homenas.netdrive.Constants.PERMISSIONS_REQUEST_CODE;
+import static com.homenas.netdrive.Constants.fabExpanded;
 import static com.homenas.netdrive.Constants.permission;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     public MenuItem viewMode;
     public MenuItem search;
     public Boolean viewGrid = true;
+//    private boolean fabExpanded = false;
+    private FrameLayout mPopMenu;
 
     public RecyclerViewFragment mRecyclerViewFragment;
     private StorageManager mStorageManager;
@@ -62,27 +65,22 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mPopMenu = (FrameLayout) findViewById(R.id.popMenu);
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar snackbar = Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG);
-                snackbar.addCallback(new Snackbar.Callback() {
-                    @Override
-                    public void onDismissed(Snackbar snackbar, int event) {
-                        // Rotate back to 0 degree
-                        fab.animate().rotation(0F).setInterpolator(new DecelerateInterpolator());
-                    }
-
-                    @Override
-                    public void onShown(Snackbar snackbar) {
-                        // Rotate 45 degree
-                        fab.animate().rotation(45F).setInterpolator(new DecelerateInterpolator());
-                    }
-                });
-                snackbar.show();
+                if (fabExpanded) {
+                    mRecyclerViewFragment.closeFabSubMenu();
+                    fab.animate().rotation(0F).setInterpolator(new DecelerateInterpolator());
+                }else{
+                    mRecyclerViewFragment.openFabSubMenu();
+                    fab.animate().rotation(45F).setInterpolator(new DecelerateInterpolator());
+                }
             }
         });
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

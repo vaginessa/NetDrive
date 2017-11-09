@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.provider.DocumentFile;
@@ -21,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import static com.homenas.netdrive.Constants.LayoutManagerType;
 import static com.homenas.netdrive.Constants.LocalRoot;
 import static com.homenas.netdrive.Constants.PERMISSIONS_REQUEST_CODE;
 import static com.homenas.netdrive.Constants.SPAN_COUNT;
+import static com.homenas.netdrive.Constants.fabExpanded;
 import static com.homenas.netdrive.R.id.recyclerView;
 
 
@@ -45,6 +48,7 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
     private RecyclerView mRecyclerView;
     private LayoutManagerType mCurrentLayoutManagerType;
     private RecyclerView.LayoutManager mLayoutManager;
+    private FrameLayout mPopMenu;
 
     private List<FilesData> mDataset = new ArrayList<>();
     public Boolean viewGrid = true;
@@ -83,6 +87,25 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
         NavigationView navigationView = (NavigationView) ((AppCompatActivity)getActivity()).findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         initItemList();
+
+        mPopMenu = (FrameLayout) getActivity().findViewById(R.id.popMenu);
+        final FloatingActionButton fabfolder = (FloatingActionButton) ((AppCompatActivity)getActivity()).findViewById(R.id.fabFolder);
+        fabfolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), "Create New Folder", Toast.LENGTH_SHORT).show();
+                closeFabSubMenu();
+            }
+        });
+
+        final FloatingActionButton fabfile = (FloatingActionButton) ((AppCompatActivity)getActivity()).findViewById(R.id.fabFile);
+        fabfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), "Create New Files", Toast.LENGTH_SHORT).show();
+                closeFabSubMenu();
+            }
+        });
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -213,5 +236,15 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
                 updateData(Constants.ExtStorage);
             }
         }
+    }
+
+    public void closeFabSubMenu() {
+        mPopMenu.setVisibility(View.INVISIBLE);
+        Constants.fabExpanded = false;
+    }
+
+    public void openFabSubMenu() {
+        mPopMenu.setVisibility(View.VISIBLE);
+        fabExpanded = true;
     }
 }
