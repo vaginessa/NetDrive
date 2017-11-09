@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -200,6 +201,13 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
                 data.file = file;
                 data.fileName = file.getName();
                 mDataset.add(data);
+            }
+            Log.i(TAG, "mDataset size: " + mDataset.size());
+            final ConstraintLayout noItem = (ConstraintLayout) getActivity().findViewById(R.id.noItem);
+            if(mDataset.size() == 0) {
+                noItem.setVisibility(View.VISIBLE);
+            }else{
+                noItem.setVisibility(View.INVISIBLE);
             }
             mAdapter.notifyDataSetChanged();
             updateTitle(curFiles.getName());
