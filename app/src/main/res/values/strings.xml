@@ -22,4 +22,6 @@
     <string name="float_new_file">New File</string>
     <!-- For RecyclerView Fragment -->
     <string name="noItem">No Item</string>
+    <!-- For RecyclerView BreadCrumbs -->
+    <string name="divider">">"</string>
 </resources>

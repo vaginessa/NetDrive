@@ -14,6 +14,7 @@ import android.support.v4.provider.DocumentFile;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,16 +43,21 @@ import static com.homenas.netdrive.R.id.recyclerView;
  * Created by engss on 24/10/2017.
  */
 
-public class RecyclerViewFragment extends Fragment implements CustomAdapter.CustomAdapterListener, MainActivity.OnBackPressedListener, NavigationView.OnNavigationItemSelectedListener {
+public class RecyclerViewFragment extends Fragment
+        implements CustomAdapter.CustomAdapterListener, MainActivity.OnBackPressedListener,
+        NavigationView.OnNavigationItemSelectedListener, BreadcrumbsAdapter.BreadcrumbsAdapterListener {
 
     private final String TAG = getClass().getSimpleName();
     private CustomAdapter mAdapter;
+    private BreadcrumbsAdapter bAdapter;
     private RecyclerView mRecyclerView;
+    private RecyclerView brecyclerView;
     private LayoutManagerType mCurrentLayoutManagerType;
     private RecyclerView.LayoutManager mLayoutManager;
     private FrameLayout mPopMenu;
 
     private List<FilesData> mDataset = new ArrayList<>();
+    private List<DocumentFile> mCrumbs = new ArrayList<>();
     public Boolean viewGrid = true;
     public DocumentFile curFiles;
     private DocumentFile curRoot;
@@ -60,6 +66,7 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAdapter = new CustomAdapter(getActivity(), mDataset, this);
+        bAdapter = new BreadcrumbsAdapter(mCrumbs, this);
         ((MainActivity) getActivity()).setOnBackPressedListener(this);
     }
 
@@ -85,6 +92,14 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
                     .getSerializable(KEY_LAYOUT_MANAGER);
         }
         setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
+
+        brecyclerView = (RecyclerView) ((AppCompatActivity)getActivity()).findViewById(R.id.breadcrumbs);
+        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        brecyclerView.setLayoutManager(mLayoutManager);
+        brecyclerView.setItemAnimator(new DefaultItemAnimator());
+        bAdapter = new BreadcrumbsAdapter(mCrumbs, this);
+        brecyclerView.setAdapter(bAdapter);
+
         NavigationView navigationView = (NavigationView) ((AppCompatActivity)getActivity()).findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         initItemList();
@@ -139,6 +154,7 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
     }
 
     private void initItemList() {
+        mCrumbs.clear();
         curRoot = LocalRoot;
         updateData(curRoot);
     }
@@ -182,11 +198,18 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
     }
 
     @Override
+    public void onCrumbClick(int position){
+        mCrumbs.subList(position + 1,mCrumbs.size()).clear();
+        updateData(mCrumbs.get(mCrumbs.size() -1));
+    }
+
+    @Override
     public void doBack() {
         Log.i(TAG,curRoot.getUri().toString());
         if(curFiles.getUri().toString().equals(curRoot.getUri().toString())) {
             Toast.makeText(getActivity(), "At root ", Toast.LENGTH_SHORT).show();
         }else{
+            mCrumbs.remove(curFiles);
             updateData(curFiles.getParentFile());
             mAdapter.notifyDataSetChanged();
         }
@@ -196,13 +219,19 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
         if(files.isDirectory()) {
             mDataset.clear();
             curFiles = files;
+            if(mCrumbs.size() != 0) {
+                if(!mCrumbs.get(mCrumbs.size()-1).getName().equals(curFiles.getName())) {
+                    mCrumbs.add(curFiles);
+                }
+            }else{
+                mCrumbs.add(curFiles);
+            }
             for(DocumentFile file : files.listFiles()) {
                 FilesData data = new FilesData();
                 data.file = file;
                 data.fileName = file.getName();
                 mDataset.add(data);
             }
-            Log.i(TAG, "mDataset size: " + mDataset.size());
             final ConstraintLayout noItem = (ConstraintLayout) getActivity().findViewById(R.id.noItem);
             if(mDataset.size() == 0) {
                 noItem.setVisibility(View.VISIBLE);
@@ -210,6 +239,8 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
                 noItem.setVisibility(View.INVISIBLE);
             }
             mAdapter.notifyDataSetChanged();
+            brecyclerView.smoothScrollToPosition(mCrumbs.size()-1);
+            bAdapter.notifyDataSetChanged();
             updateTitle(curFiles.getName());
         }
     }
@@ -241,6 +272,7 @@ public class RecyclerViewFragment extends Fragment implements CustomAdapter.Cust
                 getActivity().getContentResolver().takePersistableUriPermission(data.getData(),Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 Constants.ExtStorage = DocumentFile.fromTreeUri(getActivity(),data.getData());
                 curRoot = Constants.ExtStorage;
+                mCrumbs.clear();
                 updateData(Constants.ExtStorage);
             }
         }
