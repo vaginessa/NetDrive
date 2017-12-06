@@ -6,8 +6,7 @@ import android.os.storage.StorageVolume;
 import android.support.v4.provider.DocumentFile;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by engss on 24/10/2017.
@@ -33,6 +32,8 @@ public class Constants {
 
     public static boolean fabExpanded = false;
 
-    public static List<String> checked = new ArrayList<>();
+    public static final String starList = "starrList";
+
+    public static Set<String> starlist;
 
 }

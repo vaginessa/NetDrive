@@ -2,6 +2,7 @@ package com.homenas.netdrive;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -31,6 +32,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import java.util.HashSet;
 import java.util.List;
 
 import static com.homenas.netdrive.Constants.PERMISSIONS_REQUEST_CODE;
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     public RecyclerViewFragment mRecyclerViewFragment;
     private StorageManager mStorageManager;
     protected OnBackPressedListener onBackPressedListener;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +84,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -92,6 +94,15 @@ public class MainActivity extends AppCompatActivity {
         // Set the first MenuItem title for Actionbar title
         if(getSupportActionBar() != null) {
             getSupportActionBar().setTitle(navigationView.getMenu().getItem(4).getTitle().toString());
+        }
+
+        // SharePreferences Method to store starlist
+        sharedPreferences = this.getSharedPreferences("CheckedList", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        if(sharedPreferences.getStringSet(Constants.starList, null) == null) {
+            Constants.starlist = sharedPreferences.getStringSet(Constants.starList, new HashSet<String>());
+        }else{
+            Constants.starlist = sharedPreferences.getStringSet(Constants.starList, null);
         }
         showExtStorage();
     }
@@ -110,8 +121,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Constants.starlist = sharedPreferences.getStringSet(Constants.starList, null);
         checkExtStorage();
         showExtStorage();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        editor.remove(Constants.starList).commit();
+        editor.putStringSet(Constants.starList, Constants.starlist).commit();
     }
 
     @Override

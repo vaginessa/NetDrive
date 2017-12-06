@@ -1,6 +1,7 @@
 package com.homenas.netdrive;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.v4.widget.CompoundButtonCompat;
@@ -30,6 +31,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     private CustomAdapterListener mListener;
     private List<FilesData> mDataSet;
     private boolean mViewGrid;
+    private SharedPreferences sharedPreferences;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;
@@ -90,7 +92,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                         Color.parseColor("#ffa726")
                 }
         );
-        if(Constants.checked.contains(mDataSet.get(position).file.getUri().getPath())){
+        if(Constants.starlist.contains(mDataSet.get(position).file.getUri().getPath())){
             viewHolder.checkBox.setChecked(true);
             CompoundButtonCompat.setButtonTintList(viewHolder.checkBox, colorStateList);
         }else{
@@ -100,11 +102,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.i(TAG, "file: " + mDataSet.get(position).file.getUri().getPath() + "check: " +isChecked);
                 if(isChecked) {
-                    Constants.checked.add(mDataSet.get(position).file.getUri().getPath());
+                    Constants.starlist.add(mDataSet.get(position).file.getUri().getPath());
                 }else{
-                    Constants.checked.remove(mDataSet.get(position).file.getUri().getPath());
+                    Constants.starlist.remove(mDataSet.get(position).file.getUri().getPath());
                 }
             }
         });
@@ -118,4 +119,5 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     public void setView(boolean viewGrid) {
         mViewGrid = viewGrid;
     }
+
 }
