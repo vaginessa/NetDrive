@@ -86,7 +86,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                         new int[]{android.R.attr.state_checked} // enable
                 },
                 new int[] {
-                        Color.GRAY,
+                        Color.argb(50,128,128,128),
                         Color.parseColor("#ffa726")
                 }
         );
