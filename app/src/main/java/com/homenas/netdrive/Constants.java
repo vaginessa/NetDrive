@@ -32,8 +32,8 @@ public class Constants {
 
     public static boolean fabExpanded = false;
 
-    public static final String starList = "starrList";
+    public static final String starListKey = "starlist";
 
-    public static Set<String> starlist;
+    public static Set<String> starListSet;
 
 }

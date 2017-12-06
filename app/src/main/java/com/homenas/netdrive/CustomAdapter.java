@@ -92,7 +92,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                         Color.parseColor("#ffa726")
                 }
         );
-        if(Constants.starlist.contains(mDataSet.get(position).file.getUri().getPath())){
+        if(Constants.starListSet.contains(mDataSet.get(position).file.getUri().getPath())){
             viewHolder.checkBox.setChecked(true);
             CompoundButtonCompat.setButtonTintList(viewHolder.checkBox, colorStateList);
         }else{
@@ -103,9 +103,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
-                    Constants.starlist.add(mDataSet.get(position).file.getUri().getPath());
+                    Constants.starListSet.add(mDataSet.get(position).file.getUri().getPath());
                 }else{
-                    Constants.starlist.remove(mDataSet.get(position).file.getUri().getPath());
+                    Constants.starListSet.remove(mDataSet.get(position).file.getUri().getPath());
                 }
             }
         });

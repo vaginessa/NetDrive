@@ -95,14 +95,12 @@ public class MainActivity extends AppCompatActivity {
         if(getSupportActionBar() != null) {
             getSupportActionBar().setTitle(navigationView.getMenu().getItem(4).getTitle().toString());
         }
-
-        // SharePreferences Method to store starlist
         sharedPreferences = this.getSharedPreferences("CheckedList", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        if(sharedPreferences.getStringSet(Constants.starList, null) == null) {
-            Constants.starlist = sharedPreferences.getStringSet(Constants.starList, new HashSet<String>());
+        if(sharedPreferences.getStringSet(Constants.starListKey, null) == null) {
+            Constants.starListSet = sharedPreferences.getStringSet(Constants.starListKey, new HashSet<String>());
         }else{
-            Constants.starlist = sharedPreferences.getStringSet(Constants.starList, null);
+            Constants.starListSet = sharedPreferences.getStringSet(Constants.starListKey, null);
         }
         showExtStorage();
     }
@@ -121,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Constants.starlist = sharedPreferences.getStringSet(Constants.starList, null);
         checkExtStorage();
         showExtStorage();
     }
@@ -129,8 +126,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        editor.remove(Constants.starList).commit();
-        editor.putStringSet(Constants.starList, Constants.starlist).commit();
+        editor.remove(Constants.starListKey).commit();
+        editor.putStringSet(Constants.starListKey, Constants.starListSet).commit();
     }
 
     @Override
