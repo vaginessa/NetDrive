@@ -6,6 +6,8 @@ import android.os.storage.StorageVolume;
 import android.support.v4.provider.DocumentFile;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by engss on 24/10/2017.
@@ -30,5 +32,7 @@ public class Constants {
     public static DocumentFile ExtStorage = null;
 
     public static boolean fabExpanded = false;
+
+    public static List<String> checked = new ArrayList<>();
 
 }

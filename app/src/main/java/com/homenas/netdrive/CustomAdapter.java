@@ -1,11 +1,16 @@
 package com.homenas.netdrive;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -28,6 +33,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;
+        private final CheckBox checkBox;
 
         public ViewHolder(View v) {
             super(v);
@@ -40,11 +46,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 }
             });
             textView = v.findViewById(R.id.textView);
+            checkBox = v.findViewById(R.id.checkBox);
         }
 
         public TextView getTextView() {
             return textView;
         }
+        public CheckBox getCheckBox() { return checkBox; }
     }
 
     public CustomAdapter(Context context, List<FilesData> dataSet, CustomAdapterListener listener) {
@@ -63,12 +71,43 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         Log.i(TAG, "Element " + position + " set.");
 
         // Get element from your dataset at this position and replace the contents of the view
         // with that element
         viewHolder.getTextView().setText(mDataSet.get(position).fileName);
+
+        // Get CheckBox properties
+        viewHolder.checkBox.setOnCheckedChangeListener(null);
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][] {
+                        new int[]{-android.R.attr.state_checked}, // disable
+                        new int[]{android.R.attr.state_checked} // enable
+                },
+                new int[] {
+                        Color.GRAY,
+                        Color.parseColor("#ffa726")
+                }
+        );
+        if(Constants.checked.contains(mDataSet.get(position).file.getUri().getPath())){
+            viewHolder.checkBox.setChecked(true);
+            CompoundButtonCompat.setButtonTintList(viewHolder.checkBox, colorStateList);
+        }else{
+            viewHolder.checkBox.setChecked(false);
+            CompoundButtonCompat.setButtonTintList(viewHolder.checkBox, colorStateList);
+        }
+        viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.i(TAG, "file: " + mDataSet.get(position).file.getUri().getPath() + "check: " +isChecked);
+                if(isChecked) {
+                    Constants.checked.add(mDataSet.get(position).file.getUri().getPath());
+                }else{
+                    Constants.checked.remove(mDataSet.get(position).file.getUri().getPath());
+                }
+            }
+        });
     }
 
     @Override
