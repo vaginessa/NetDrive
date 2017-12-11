@@ -3,6 +3,7 @@ package com.homenas.netdrive;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
 import android.support.annotation.NonNull;
@@ -27,6 +28,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.homenas.netdrive.Adapters.BreadcrumbsAdapter;
+import com.homenas.netdrive.Adapters.RecyclerviewAdapter;
+import com.homenas.netdrive.Data.FilesData;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,11 +49,11 @@ import static com.homenas.netdrive.R.id.recyclerView;
  */
 
 public class RecyclerViewFragment extends Fragment
-        implements CustomAdapter.CustomAdapterListener, MainActivity.OnBackPressedListener,
+        implements RecyclerviewAdapter.CustomAdapterListener, MainActivity.OnBackPressedListener,
         NavigationView.OnNavigationItemSelectedListener, BreadcrumbsAdapter.BreadcrumbsAdapterListener {
 
     private final String TAG = getClass().getSimpleName();
-    private CustomAdapter mAdapter;
+    private RecyclerviewAdapter mAdapter;
     private BreadcrumbsAdapter bAdapter;
     private RecyclerView mRecyclerView;
     private RecyclerView brecyclerView;
@@ -65,7 +70,7 @@ public class RecyclerViewFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new CustomAdapter(getActivity(), mDataset, this);
+        mAdapter = new RecyclerviewAdapter(getActivity(), mDataset, this);
         bAdapter = new BreadcrumbsAdapter(mCrumbs, this);
         ((MainActivity) getActivity()).setOnBackPressedListener(this);
     }
@@ -132,13 +137,13 @@ public class RecyclerViewFragment extends Fragment
         updateTitle(item.getTitle().toString());
 
         if (id == R.id.nav_audio) {
-            // Handle the camera action
+            getInternal(Environment.DIRECTORY_MUSIC);
         } else if (id == R.id.nav_image) {
-
+            getInternal(Environment.DIRECTORY_DCIM);
         } else if (id == R.id.nav_video) {
-
+            getInternal(Environment.DIRECTORY_MOVIES);
         } else if (id == R.id.nav_download) {
-
+            getInternal(Environment.DIRECTORY_DOWNLOADS);
         } else if (id == R.id.nav_local) {
             initItemList();
         } else if (id == R.id.nav_sdcard) {
@@ -261,6 +266,15 @@ public class RecyclerViewFragment extends Fragment
                     startActivityForResult(intent, PERMISSIONS_REQUEST_CODE);
                 }
             }
+        }
+    }
+
+    private void getInternal(String directoryName) {
+        StorageManager mStorageManager = getActivity().getSystemService(StorageManager.class);
+        if (mStorageManager != null) {
+            StorageVolume primaryVolume = mStorageManager.getPrimaryStorageVolume();
+            Intent intent = primaryVolume.createAccessIntent(directoryName);
+            startActivityForResult(intent, PERMISSIONS_REQUEST_CODE);
         }
     }
 

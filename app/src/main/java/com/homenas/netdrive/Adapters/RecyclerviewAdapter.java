@@ -1,7 +1,6 @@
-package com.homenas.netdrive;
+package com.homenas.netdrive.Adapters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.v4.widget.CompoundButtonCompat;
@@ -14,13 +13,17 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.homenas.netdrive.Constants;
+import com.homenas.netdrive.Data.FilesData;
+import com.homenas.netdrive.R;
+
 import java.util.List;
 
 /**
  * Created by engss on 24/10/2017.
  */
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
+public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapter.ViewHolder> {
 
     public interface CustomAdapterListener { // create an interface
         void onItemClick(int position); // create callback function
@@ -31,7 +34,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     private CustomAdapterListener mListener;
     private List<FilesData> mDataSet;
     private boolean mViewGrid;
-    private SharedPreferences sharedPreferences;
+    private boolean LOG = false;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;
@@ -57,7 +60,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         public CheckBox getCheckBox() { return checkBox; }
     }
 
-    public CustomAdapter(Context context, List<FilesData> dataSet, CustomAdapterListener listener) {
+    public RecyclerviewAdapter(Context context, List<FilesData> dataSet, CustomAdapterListener listener) {
         mContext = context;
         mDataSet = dataSet;
         this.mListener = listener;
@@ -74,7 +77,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
-        Log.i(TAG, "Element " + position + " set.");
+        if(LOG) Log.i(TAG, "Element " + position + " set.");
 
         // Get element from your dataset at this position and replace the contents of the view
         // with that element

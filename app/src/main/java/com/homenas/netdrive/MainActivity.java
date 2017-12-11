@@ -32,6 +32,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import com.homenas.netdrive.Utils.NetworkUtils;
+
 import java.util.HashSet;
 import java.util.List;
 
@@ -62,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         checkPermission();
         checkExtStorage();
+        showNetwork();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -121,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         checkExtStorage();
         showExtStorage();
+        Log.i(TAG, "here");
+        showNetwork();
     }
 
     @Override
@@ -230,5 +234,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
         this.onBackPressedListener = onBackPressedListener;
+    }
+
+    private void showNetwork() {
+        new NetworkUtils(getApplicationContext(),Constants.getConType).execute();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu menu = navigationView.getMenu();
+        if(!Constants.isWifi) {
+            menu.findItem(R.id.nav_network).setVisible(false);
+        }else{
+            menu.findItem(R.id.nav_network).setVisible(true);
+        }
     }
 }

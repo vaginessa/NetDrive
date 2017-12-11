@@ -36,4 +36,12 @@ public class Constants {
 
     public static Set<String> starListSet;
 
+    public static boolean isWifi = false;
+
+    public static String IPAddress = null;
+
+    public static String BcastAddress = null;
+
+    public static final String getConType = "ConnectionType";
+
 }
